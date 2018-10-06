@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd"
+       default-init-method="turnOnLight" default-destroy-method="turnOffLight">
+    <aop:spring-configured/>
+    <context:component-scan base-package="com.myown"/>
+    <!--<lang:jruby id="lime" script-source="classpath:RubyLime" script-interfaces="Lime"/>-->
+
+    <bean id = "duke" class="com.myown.PoeticJuggler">
+           <constructor-arg value="15"/>
+        <constructor-arg ref="sonet29"/>
+    </bean>
+    <bean class="com.myown.Fuddifier"/>
+
+    <bean id = "sonet29" class="com.myown.Sonet29">
+    </bean>
+
+    <bean id = "stage" class="com.myown.Stage" factory-method="getInstance"/>
+    <bean id = "ticket" class="com.myown.Ticket" scope="prototype"/>
+    <bean id="auditorium" class="com.myown.Auditorium" init-method="turnOnLight" destroy-method="turnOffLight"/>
+    <bean id="kenny" class="com.myown.Instrumentalist">
+        <property name="song" value="Just song"/>
+        <property name="instrument">
+            <bean class="com.myown.Saxophone"/>
+        </property>
+    </bean>
+    <bean id="john" class="com.myown.Instrumentalist" p:song="Cool" p:instrument-ref="sax"/>
+    <bean id="sax" class="com.myown.Saxophone"/>
+    <bean id="piano" class="Piano"/>
+    <bean id="guitar" class="com.myown.Guitar"/>
+    <bean id="carl" class = "com.myown.Instrumentalist">
+        <property name="instrument" value="#{kenny.instrument}"/>
+        <property name="song" value="#{kenny.song.toUpperCase()}"/>
+    </bean>
+    <bean id="baseInstrumentalist" class = "com.myown.Instrumentalist" abstract="true" p:instrument-ref="sax" p:song="Just song"/>
+    <bean id="ben" parent="baseInstrumentalist"/>
+    <bean id="cool" parent="baseInstrumentalist">
+        <property name="song" value="cool"/>
+    </bean>
+    <bean id="basePerformer" abstract="true">
+        <property name="song" value="cool"/>
+        <property name="instrument" ref="sax"/>
+
+    </bean>
+<bean id="kik" class="com.myown.Instrumentalist" parent="basePerformer"/>
+    <bean id="hank" class="com.myown.OneManBand">
+        <property name="instruments">
+            <list>
+                <ref bean="guitar"/>
+                <ref bean="piano"/>
+                <ref bean="sax"/>
+
+            </list>
+        </property>
+    </bean>
+    <bean id = "magicBox" class="com.myown.MagicBox">
+        <replaced-method name="getContent" replacer="tigerReplacer"/>
+    </bean>
+    <bean id = "tigerReplacer" class="com.myown.TigerReplacer"/>
+    <bean id = "henry" class="com.myown.Illusionist">
+        <property name="magicBox" ref="magicBox"/>
+        <property name="magicWords" value="\n Abra kadabra \n"/>
+    </bean>
+    <bean id = "steve"
+          class="com.myown.InstrumentalistAbs">
+    <lookup-method name="getInstrument" bean="guitar"/>
+        <property name="song" value="Green"/>
+    </bean>
+
+    <bean id = "pianist" class="com.myown.Instrumentalist" abstract="true">
+        <property name="song" value="Chop"/>
+        <property name="instrument"> <bean class="Piano"/> </property>
+
+    </bean>
+    <bean id="refreshListener" class="com.myown.RefreshListener"/>
+    <!--<bean id = "coconut" class="Coconut" p:lime-ref="lime"/>-->
+
+
+</beans>

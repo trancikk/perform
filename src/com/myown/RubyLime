@@ -1,0 +1,6 @@
+class Lime
+    def drink
+        puts "Ruby!"
+    end
+end
+Lime.new
